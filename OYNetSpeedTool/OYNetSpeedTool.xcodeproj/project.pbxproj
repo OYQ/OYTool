@@ -12,6 +12,7 @@
 		35CAA379214FA815006982EE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35CAA377214FA815006982EE /* Main.storyboard */; };
 		35CAA37B214FA816006982EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35CAA37A214FA816006982EE /* Assets.xcassets */; };
 		35CAA37E214FA816006982EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35CAA37C214FA816006982EE /* LaunchScreen.storyboard */; };
+		35CAA386214FA976006982EE /* OYNetSpeedTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35CAA385214FA976006982EE /* OYNetSpeedTool.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		35CAA37A214FA816006982EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35CAA37D214FA816006982EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35CAA37F214FA816006982EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		35CAA385214FA976006982EE /* OYNetSpeedTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OYNetSpeedTool.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				35CAA373214FA815006982EE /* AppDelegate.swift */,
 				35CAA375214FA815006982EE /* ViewController.swift */,
+				35CAA385214FA976006982EE /* OYNetSpeedTool.swift */,
 				35CAA377214FA815006982EE /* Main.storyboard */,
 				35CAA37A214FA816006982EE /* Assets.xcassets */,
 				35CAA37C214FA816006982EE /* LaunchScreen.storyboard */,
@@ -137,6 +140,7 @@
 			files = (
 				35CAA376214FA815006982EE /* ViewController.swift in Sources */,
 				35CAA374214FA815006982EE /* AppDelegate.swift in Sources */,
+				35CAA386214FA976006982EE /* OYNetSpeedTool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
