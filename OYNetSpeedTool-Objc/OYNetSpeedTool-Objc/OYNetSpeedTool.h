@@ -10,19 +10,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger,OYNetSpeedToolType) {
-    OYNetSpeedToolTypeLo = 0,
-    OYNetSpeedToolTypeEn,
-    OYNetSpeedToolTypeAp,
-    OYNetSpeedToolTypePdp,
-    OYNetSpeedToolTypeAwdl,
-    OYNetSpeedToolTypeUtun
-};
-
 @protocol OYNetSpeedToolDelegate <NSObject>
 @optional
-- (void)onUpdateNetReceive:(OYNetSpeedToolType)type speed:(unsigned long long)speed;
-- (void)onUpdateNetSend:(OYNetSpeedToolType)type speed:(unsigned long long)speed;
+- (void)onUpdateNetReceiveSpeed:(unsigned long long)speed;
+- (void)onUpdateNetSendSpeed:(unsigned long long)speed;
 @end
 
 @interface OYNetSpeedTool : NSObject
