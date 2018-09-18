@@ -74,6 +74,7 @@ static NSUInteger const kOYNetSpeedToolTimeInterval = 2;
     self.lastSeData = self.seData;
     self.reData = 0;
     self.seData = 0;
+    
 
 }
 
