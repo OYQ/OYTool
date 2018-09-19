@@ -13,6 +13,7 @@
 		4D5F37AF2152224C009AD8A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D5F37AE2152224C009AD8A7 /* Assets.xcassets */; };
 		4D5F37B22152224C009AD8A7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D5F37B02152224C009AD8A7 /* LaunchScreen.storyboard */; };
 		4D5F37B52152224C009AD8A7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F37B42152224C009AD8A7 /* main.m */; };
+		4D5F37BD215222A5009AD8A7 /* OYFpsMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F37BC215222A5009AD8A7 /* OYFpsMonitor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		4D5F37B12152224C009AD8A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4D5F37B32152224C009AD8A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D5F37B42152224C009AD8A7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4D5F37BB215222A5009AD8A7 /* OYFpsMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OYFpsMonitor.h; sourceTree = "<group>"; };
+		4D5F37BC215222A5009AD8A7 /* OYFpsMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OYFpsMonitor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +70,8 @@
 				4D5F37B02152224C009AD8A7 /* LaunchScreen.storyboard */,
 				4D5F37B32152224C009AD8A7 /* Info.plist */,
 				4D5F37B42152224C009AD8A7 /* main.m */,
+				4D5F37BB215222A5009AD8A7 /* OYFpsMonitor.h */,
+				4D5F37BC215222A5009AD8A7 /* OYFpsMonitor.m */,
 			);
 			path = OYFpsMonitorDemo;
 			sourceTree = "<group>";
@@ -143,6 +148,7 @@
 			files = (
 				4D5F37AA2152224C009AD8A7 /* ViewController.m in Sources */,
 				4D5F37B52152224C009AD8A7 /* main.m in Sources */,
+				4D5F37BD215222A5009AD8A7 /* OYFpsMonitor.m in Sources */,
 				4D5F37A72152224C009AD8A7 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
