@@ -10,7 +10,6 @@
 #import "OYFpsMonitor.h"
 
 @interface ViewController ()<OYFpsMonitorDelegate>
-
 @end
 
 @implementation ViewController
@@ -20,6 +19,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     [[OYFpsMonitor shareMonitor] startMonitor];
     [OYFpsMonitor shareMonitor].delegate = self;
+    
 }
 
 -(void)fpsMonitor:(OYFpsMonitor *)monitor currentFps:(NSUInteger)fps{

@@ -50,21 +50,34 @@
 }
 
 - (void)displayBit{
-    if (self.lastTimestamp <= 0) {
-        self.lastTimestamp = self.displayLink.timestamp;
-        return;
-    }
-    self.count ++;
-    
-    CFTimeInterval interval = self.displayLink.timestamp - self.lastTimestamp;
-    if(interval >= 1) {//相差大于1s
-        self.lastTimestamp = self.displayLink.timestamp;
-        self.currentFPS = self.count / interval;
-        self.count = 0;
-        
+    if (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0) {
+        //回调速度比较快
+        self.currentFPS = 1 /(self.displayLink.targetTimestamp - self.displayLink.timestamp);
         if ([self.delegate respondsToSelector:@selector(fpsMonitor:currentFps:)]) {
             [self.delegate fpsMonitor:self currentFps:self.currentFPS];
         }
+    }else{
+        if (self.lastTimestamp <= 0) {
+            self.lastTimestamp = self.displayLink.timestamp;
+            return;
+        }
+        self.count ++;
+        
+        CFTimeInterval interval = self.displayLink.timestamp - self.lastTimestamp;
+        if(interval >= 1) {//相差大于1s
+            self.lastTimestamp = self.displayLink.timestamp;
+            self.currentFPS = self.count / interval;
+            self.count = 0;
+            
+            if ([self.delegate respondsToSelector:@selector(fpsMonitor:currentFps:)]) {
+                [self.delegate fpsMonitor:self currentFps:self.currentFPS];
+            }
+        }
     }
+    
+    
+    
+    
+    
 }
 @end
