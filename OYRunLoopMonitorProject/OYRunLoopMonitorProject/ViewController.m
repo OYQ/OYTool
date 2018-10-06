@@ -29,5 +29,10 @@
     
 }
 
+- (IBAction)buttonClick:(id)sender {
+    NSLog(@"---");
+    sleep(10);
+    NSLog(@"---");
+}
 
 @end

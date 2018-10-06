@@ -7,12 +7,18 @@
 //
 
 #import "OYRLMonitor.h"
+#import <execinfo.h>
+#import "BSBacktraceLogger.h"
+
+static NSTimeInterval threadTimeInterval = 0.5;
 
 static double _beforeWaiting;
 static double _afterWaiting;
+static double _lastRecordTime;
 
 @interface OYRLMonitor()
 @property (nonatomic, assign) CFRunLoopObserverRef observer;
+@property (nonatomic, strong) NSMutableArray *backtrace;
 @end
 
 @implementation OYRLMonitor
@@ -27,6 +33,7 @@ static double _afterWaiting;
 
 - (void)startMonitor{
     [self addMainRunloopOberver];
+    [self addTimerToAutherThread];
 }
 
 - (void)stopMonitor{
@@ -71,12 +78,10 @@ void runLoopObserver(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
             break;
         case kCFRunLoopBeforeWaiting:{
             _beforeWaiting = [[NSDate date] timeIntervalSince1970];
-            NSLog(@"kCFRunLoopBeforeWaiting");
             break;
         }
         case kCFRunLoopAfterWaiting:{
             _afterWaiting = [[NSDate date] timeIntervalSince1970];
-            NSLog(@"kCFRunLoopAfterWaiting");
             break;
         }
         default:
@@ -85,7 +90,61 @@ void runLoopObserver(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
 }
 
 - (void)addTimerToAutherThread{
-    
+    static NSThread *thread = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        thread = [[NSThread alloc] initWithTarget:self selector:@selector(networkRequestThreadEntryPoint) object:nil];
+        [thread start];
+    });
 }
 
+- (void)networkRequestThreadEntryPoint{
+    @autoreleasepool {
+        NSTimer *timer = [NSTimer timerWithTimeInterval:threadTimeInterval target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+        
+        [[NSThread currentThread] setName:@"monitorControllerThread"];
+        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
+        [runLoop addPort:[NSMachPort port] forMode:NSRunLoopCommonModes];
+        [runLoop run];
+    }
+}
+
+- (void)timerFired{
+    if (_afterWaiting - _beforeWaiting < 0.01) {
+        return;
+    }
+    
+    if (_afterWaiting == _lastRecordTime) {
+        //去除重复的监听
+        return;
+    }
+    
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    if ((currentTime - _afterWaiting) >= 2.0) {
+        NSLog(@"卡住了");
+        BSLOG_MAIN 
+        _lastRecordTime = _afterWaiting;
+    }
+
+}
+
+- (void)logStack{
+    void* callstack[128];
+    int frames = backtrace(callstack, 128);
+    char **strs = backtrace_symbols(callstack, frames);
+    int i;
+    _backtrace = [NSMutableArray arrayWithCapacity:frames];
+    for ( i = 0 ; i < frames ; i++ ){
+        [_backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
+    }
+    free(strs);
+}
+
+-(NSMutableArray *)backtrace{
+    if (!_backtrace) {
+        _backtrace = [NSMutableArray array];
+    }
+    return _backtrace;
+}
 @end
