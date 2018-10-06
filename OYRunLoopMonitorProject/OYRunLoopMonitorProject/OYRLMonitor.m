@@ -15,6 +15,7 @@ static NSTimeInterval threadTimeInterval = 0.5;
 static double _beforeWaiting;
 static double _afterWaiting;
 static double _lastRecordTime;
+static bool _isSleeping;
 
 @interface OYRLMonitor()
 @property (nonatomic, assign) CFRunLoopObserverRef observer;
@@ -78,10 +79,12 @@ void runLoopObserver(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
             break;
         case kCFRunLoopBeforeWaiting:{
             _beforeWaiting = [[NSDate date] timeIntervalSince1970];
+            _isSleeping = YES;
             break;
         }
         case kCFRunLoopAfterWaiting:{
             _afterWaiting = [[NSDate date] timeIntervalSince1970];
+            _isSleeping = NO;
             break;
         }
         default:
@@ -111,7 +114,8 @@ void runLoopObserver(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
 }
 
 - (void)timerFired{
-    if (_afterWaiting - _beforeWaiting < 0.01) {
+    if (_isSleeping) {
+        //正在休眠，直接跳过
         return;
     }
     
@@ -121,7 +125,11 @@ void runLoopObserver(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
     }
     
     NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
-    if ((currentTime - _afterWaiting) >= 2.0) {
+    
+    bool con0 = currentTime - _afterWaiting >= 2.0;
+    bool con1 = _beforeWaiting - _afterWaiting >= 2.0;
+    
+    if (!_isSleeping && (con0 || con1)) {
         NSLog(@"卡住了");
         BSLOG_MAIN 
         _lastRecordTime = _afterWaiting;
