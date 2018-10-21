@@ -15,6 +15,7 @@
 		4D5F37FC21527A8C009AD8A7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F37FB21527A8C009AD8A7 /* main.m */; };
 		4D5F380421527A9D009AD8A7 /* OYRLMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F380321527A9D009AD8A7 /* OYRLMonitor.m */; };
 		4DAD0BC6215BB1930027429D /* BSBacktraceLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DAD0BC5215BB1930027429D /* BSBacktraceLogger.m */; };
+		4DE6AD03217772EA001A574C /* YYWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6AD01217772EA001A574C /* YYWeakProxy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,8 @@
 		4D5F380321527A9D009AD8A7 /* OYRLMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OYRLMonitor.m; sourceTree = "<group>"; };
 		4DAD0BC4215BB1930027429D /* BSBacktraceLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSBacktraceLogger.h; sourceTree = "<group>"; };
 		4DAD0BC5215BB1930027429D /* BSBacktraceLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSBacktraceLogger.m; sourceTree = "<group>"; };
+		4DE6AD01217772EA001A574C /* YYWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWeakProxy.m; sourceTree = "<group>"; };
+		4DE6AD02217772EA001A574C /* YYWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWeakProxy.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +78,8 @@
 				4D5F37FB21527A8C009AD8A7 /* main.m */,
 				4D5F380221527A9D009AD8A7 /* OYRLMonitor.h */,
 				4D5F380321527A9D009AD8A7 /* OYRLMonitor.m */,
+				4DE6AD02217772EA001A574C /* YYWeakProxy.h */,
+				4DE6AD01217772EA001A574C /* YYWeakProxy.m */,
 				4DAD0BC4215BB1930027429D /* BSBacktraceLogger.h */,
 				4DAD0BC5215BB1930027429D /* BSBacktraceLogger.m */,
 			);
@@ -153,6 +158,7 @@
 			files = (
 				4D5F37F121527A8C009AD8A7 /* ViewController.m in Sources */,
 				4D5F37FC21527A8C009AD8A7 /* main.m in Sources */,
+				4DE6AD03217772EA001A574C /* YYWeakProxy.m in Sources */,
 				4D5F380421527A9D009AD8A7 /* OYRLMonitor.m in Sources */,
 				4D5F37EE21527A8C009AD8A7 /* AppDelegate.m in Sources */,
 				4DAD0BC6215BB1930027429D /* BSBacktraceLogger.m in Sources */,

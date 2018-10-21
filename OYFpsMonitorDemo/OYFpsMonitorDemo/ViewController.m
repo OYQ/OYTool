@@ -10,6 +10,8 @@
 #import "OYFpsMonitor.h"
 
 @interface ViewController ()<OYFpsMonitorDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *fpsLabel;
+@property (nonatomic, strong) OYFpsMonitor *fpsMonitor;
 @end
 
 @implementation ViewController
@@ -17,13 +19,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [[OYFpsMonitor shareMonitor] startMonitor];
-    [OYFpsMonitor shareMonitor].delegate = self;
+    self.fpsMonitor = [[OYFpsMonitor alloc] init];
+    self.fpsMonitor.delegate = self;
+//    [[OYFpsMonitor shareMonitor] startMonitor];
+//    [OYFpsMonitor shareMonitor].delegate = self;
     
 }
 
 -(void)fpsMonitor:(OYFpsMonitor *)monitor currentFps:(NSUInteger)fps{
-    NSLog(@"fps:%lu",(unsigned long)fps);
+    self.fpsLabel.text = [NSString stringWithFormat:@"FPS:%lu",(unsigned long)fps];
+}
+- (IBAction)startMonitor:(id)sender {
+    [self.fpsMonitor startMonitor];
+}
+- (IBAction)stopMonitor:(id)sender {
+    [self.fpsMonitor stopMonitor];
+}
+- (IBAction)destory:(id)sender {
+    self.fpsMonitor = nil;
+}
+
+- (IBAction)kadunbutton:(id)sender {
+    for (int i=0; i<10000; i++) {
+        for (int i=0; i<10000; i++) {
+            float a = 3.4554451/54547.4578;
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning {

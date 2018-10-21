@@ -9,6 +9,7 @@
 #import "OYRLMonitor.h"
 #import <execinfo.h>
 #import "BSBacktraceLogger.h"
+#import "YYWeakProxy.h"
 
 static NSTimeInterval threadTimeInterval = 0.5;
 
@@ -19,7 +20,9 @@ static bool _isSleeping;
 
 @interface OYRLMonitor()
 @property (nonatomic, assign) CFRunLoopObserverRef observer;
-@property (nonatomic, strong) NSMutableArray *backtrace;
+@property (nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) NSRunLoop *runloop;
+@property (nonatomic, assign, getter=isMonitoring) BOOL monitoring;
 @end
 
 @implementation OYRLMonitor
@@ -33,18 +36,36 @@ static bool _isSleeping;
 }
 
 - (void)startMonitor{
-    [self addMainRunloopOberver];
-    [self addTimerToAutherThread];
+    if (!self.isMonitoring) {
+        [self addMainRunloopOberver];
+        [self addTimerToAutherThread];
+        self.monitoring = YES;
+    }
+    
 }
 
 - (void)stopMonitor{
-    
+    if (self.isMonitoring) {
+        [self.timer invalidate];
+        
+        CFRunLoopRemoveObserver(CFRunLoopGetMain(), self.observer, kCFRunLoopCommonModes);
+        CFRelease(self.observer);
+        self.observer = NULL;
+        
+        CFRunLoopStop(self.runloop.getCFRunLoop);
+    }
+    self.monitoring = NO;
+
+}
+
+-(void)dealloc{
+    NSLog(@"dealloc");
 }
 
 - (void)addMainRunloopOberver{
     //需要在主线程中添加
     dispatch_async(dispatch_get_main_queue(), ^{
-       //创建一个单独的runloop，不要添加在主releasepool中
+       //创建一个单独的runloop
         @autoreleasepool{
             NSRunLoop *mainRunLoop = [NSRunLoop mainRunLoop];
             
@@ -64,7 +85,7 @@ static bool _isSleeping;
                 //将Cocoa的NSRunLoop类型转换成Core Foundation的CFRunLoopRef类型
                 CFRunLoopRef cfRunLoop = [mainRunLoop getCFRunLoop];
                 //将新建的observer加入到当前thread的run loop
-                CFRunLoopAddObserver(cfRunLoop, self.observer, kCFRunLoopCommonModes);
+                CFRunLoopAddObserver(cfRunLoop, self.observer, kCFRunLoopDefaultMode);
             }
         }
     });
@@ -93,23 +114,20 @@ void runLoopObserver(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
 }
 
 - (void)addTimerToAutherThread{
-    static NSThread *thread = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        thread = [[NSThread alloc] initWithTarget:self selector:@selector(networkRequestThreadEntryPoint) object:nil];
-        [thread start];
-    });
+    NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(networkRequestThreadEntryPoint) object:nil];
+    [thread setName:@"monitorControllerThread"];
+    [thread start];
 }
 
 - (void)networkRequestThreadEntryPoint{
     @autoreleasepool {
-        NSTimer *timer = [NSTimer timerWithTimeInterval:threadTimeInterval target:self selector:@selector(timerFired) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+        self.timer = [NSTimer timerWithTimeInterval:threadTimeInterval target:[YYWeakProxy proxyWithTarget:self] selector:@selector(timerFired) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
         
-        [[NSThread currentThread] setName:@"monitorControllerThread"];
-        NSRunLoop *runLoop = [NSRunLoop currentRunLoop];
-        [runLoop addPort:[NSMachPort port] forMode:NSRunLoopCommonModes];
-        [runLoop run];
+        //子线程默认不开启 runloop，它会向一个运行完所有代码后退出线程
+        self.runloop = [NSRunLoop currentRunLoop];
+        [self.runloop addPort:[NSMachPort port] forMode:NSDefaultRunLoopMode];
+        [self.runloop runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
 }
 
@@ -135,24 +153,5 @@ void runLoopObserver(CFRunLoopObserverRef observer, CFRunLoopActivity activity, 
         _lastRecordTime = _afterWaiting;
     }
 
-}
-
-- (void)logStack{
-    void* callstack[128];
-    int frames = backtrace(callstack, 128);
-    char **strs = backtrace_symbols(callstack, frames);
-    int i;
-    _backtrace = [NSMutableArray arrayWithCapacity:frames];
-    for ( i = 0 ; i < frames ; i++ ){
-        [_backtrace addObject:[NSString stringWithUTF8String:strs[i]]];
-    }
-    free(strs);
-}
-
--(NSMutableArray *)backtrace{
-    if (!_backtrace) {
-        _backtrace = [NSMutableArray array];
-    }
-    return _backtrace;
 }
 @end

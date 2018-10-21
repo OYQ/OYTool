@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.monitor = [OYRLMonitor shareMonitor];
+    self.monitor = [[OYRLMonitor alloc] init];
     [self.monitor startMonitor];
 }
 
@@ -29,9 +29,24 @@
     
 }
 
+- (IBAction)startMonitor:(id)sender {
+//    [[OYRLMonitor shareMonitor] startMonitor];
+    [self.monitor startMonitor];
+}
+
+- (IBAction)stopMonitor:(id)sender {
+//    [[OYRLMonitor shareMonitor] stopMonitor];
+    [self.monitor stopMonitor];
+}
+
+- (IBAction)destory:(id)sender {
+    [self.monitor stopMonitor];
+    self.monitor = nil;
+}
+
 - (IBAction)buttonClick:(id)sender {
     NSLog(@"---");
-    sleep(10);
+    sleep(5);
     NSLog(@"---");
 }
 

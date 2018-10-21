@@ -367,6 +367,7 @@ uint32_t bs_imageIndexContainingAddress(const uintptr_t address) {
             if(cmdPtr == 0) {
                 continue;
             }
+            //寻找包含地址的目标镜像
             for(uint32_t iCmd = 0; iCmd < header->ncmds; iCmd++) {
                 const struct load_command* loadCmd = (struct load_command*)cmdPtr;
                 if(loadCmd->cmd == LC_SEGMENT) {

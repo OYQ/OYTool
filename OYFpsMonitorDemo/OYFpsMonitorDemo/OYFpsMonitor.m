@@ -8,6 +8,7 @@
 
 #import "OYFpsMonitor.h"
 #import <UIKit/UIKit.h>
+#import "YYWeakProxy.h"
 
 @interface OYFpsMonitor()
 @property (nonatomic, strong) CADisplayLink *displayLink;
@@ -29,8 +30,7 @@
 -(instancetype)init{
     self = [super init];
     if (self) {
-        //这里会内存泄漏
-        _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayBit)];
+        _displayLink = [CADisplayLink displayLinkWithTarget:[YYWeakProxy proxyWithTarget:self] selector:@selector(displayBit)];
         [_displayLink setPaused:YES];
         [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
     }
@@ -38,6 +38,7 @@
 }
 
 -(void)dealloc{
+    NSLog(@"dealloc");
     [_displayLink invalidate];
 }
 
@@ -50,34 +51,21 @@
 }
 
 - (void)displayBit{
-    if (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0) {
-        //回调速度比较快
-        self.currentFPS = 1 /(self.displayLink.targetTimestamp - self.displayLink.timestamp);
+    if (self.lastTimestamp <= 0) {
+        self.lastTimestamp = self.displayLink.timestamp;
+        return;
+    }
+    self.count ++;
+    
+    CFTimeInterval interval = self.displayLink.timestamp - self.lastTimestamp;
+    if(interval >= 1) {//相差大于1s
+        self.lastTimestamp = self.displayLink.timestamp;
+        self.currentFPS = self.count / interval;
+        self.count = 0;
+        
         if ([self.delegate respondsToSelector:@selector(fpsMonitor:currentFps:)]) {
             [self.delegate fpsMonitor:self currentFps:self.currentFPS];
         }
-    }else{
-        if (self.lastTimestamp <= 0) {
-            self.lastTimestamp = self.displayLink.timestamp;
-            return;
-        }
-        self.count ++;
-        
-        CFTimeInterval interval = self.displayLink.timestamp - self.lastTimestamp;
-        if(interval >= 1) {//相差大于1s
-            self.lastTimestamp = self.displayLink.timestamp;
-            self.currentFPS = self.count / interval;
-            self.count = 0;
-            
-            if ([self.delegate respondsToSelector:@selector(fpsMonitor:currentFps:)]) {
-                [self.delegate fpsMonitor:self currentFps:self.currentFPS];
-            }
-        }
     }
-    
-    
-    
-    
-    
 }
 @end
